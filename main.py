@@ -14,13 +14,10 @@ model = genai.GenerativeModel('gemini-1.5-flash')
 def gerar():
     try:
         data = request.json
-        qi = data.get('qi') or 100
-        
-        prompt = f"Gere 12 questões de múltipla escolha para QI {qi}. Responda APENAS o JSON puro: " + '[{"area": "Lógica", "q": "pergunta", "opt": ["a","b","c","d"], "correct": 0}]'
-        
+        qi = data.get('qi', 100)
+        prompt = f"Gere 12 questoes de multipla escolha para QI {qi}. Responda apenas JSON puro: " + '[{"area": "Logica", "q": "pergunta", "opt": ["a","b","c","d"], "correct": 0}]'
         response = model.generate_content(prompt)
         clean_text = response.text.replace('```json', '').replace('```', '').strip()
-        
         return jsonify(json.loads(clean_text))
     except Exception as e:
         return jsonify({"error": str(e)}), 500
